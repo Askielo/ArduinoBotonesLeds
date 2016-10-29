@@ -25,6 +25,7 @@ unsigned long antMillis = 0;
 const long intervalo = 1000;
 
 void setup() {
+  Serial.begin(9600);
   // Se identifica el pin 13 como salida
   pinMode(ledPin13, OUTPUT);
   // Se identifica el pin 2 como entrada
