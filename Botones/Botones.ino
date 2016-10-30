@@ -20,11 +20,14 @@ int b2 = 0;
 int b3 = 0;
 int b4 = 0;
 int ledState = LOW;
+int cont = 0;
+
 
 unsigned long antMillis = 0;
 const long intervalo = 1000;
 
 void setup() {
+
   Serial.begin(9600);
   // Se identifica el pin 13 como salida
   pinMode(ledPin13, OUTPUT);
@@ -54,41 +57,98 @@ void setup() {
   pinMode(buttonPin6, INPUT);
 }
 
-unsigned long offset = 0;
-boolean setupEnded = false;
-
 
 void loop() {
 
-  Serial.print(start);
 
-  unsigned long actualMillis = millis() + offset;
+
+
   buttonState6 = digitalRead(buttonPin6);
   if (buttonState6 == HIGH) {
     start = 1;
-    setupEnded = true;
   }
 
-  Serial.print(start);
 
-  if (actualMillis - antMillis >= intervalo) {
 
-    if (setupEnded != true) {
+  if (start == 1) {
 
-      offset += 1000ul * 60ul * 5ul;
+    if (cont == 0) {
+      Serial.println("Fase1");
     }
-    antMillis = actualMillis;
 
+    digitalWrite(ledPin13, HIGH);
+    digitalWrite(ledPin13, LOW);
 
-    if (start == 1) {
+    // Leemos si el botón en pin2 está abierto o cerrado
+    buttonState2 = digitalRead( buttonPin2 );
 
-      if (ledState == LOW) {
-        ledState = HIGH;
-      } else {
-        ledState = LOW;
+    // Si está siendo pulsado es HIGH
+    if (buttonState2 == HIGH) {
+      // Y el LED se enciende
+      digitalWrite(ledPin13, HIGH);
+      b1 = 1;
+    }
+    else {
+      // Si no es asi, se apaga
+      digitalWrite(ledPin13, LOW);
+    }
+    //
+    //
+    // Leemos si el botón en pin3 está abierto o cerrado
+    buttonState3 = digitalRead( buttonPin3 );
+
+    // Si está siendo pulsado es HIGH
+    if (buttonState3 == HIGH) {
+      // Y el LED se enciende
+      digitalWrite(ledPin12, HIGH);
+      b2 = 1;
+    }
+    else {
+      // Si no es asi, se apaga
+      digitalWrite(ledPin12, LOW);
+    }
+    //
+    //
+    // Leemos si el botón en pin4 está abierto o cerrado
+    buttonState4 = digitalRead( buttonPin4 );
+
+    // Si está siendo pulsado es HIGH
+    if (buttonState4 == HIGH) {
+      // Y el LED se enciende
+      digitalWrite(ledPin11, HIGH);
+      b3 = 1;
+    }
+    else {
+      // Si no es asi, se apaga
+      digitalWrite(ledPin11, LOW);
+    }
+    //
+    //
+    // Leemos si el botón en pin5 está abierto o cerrado
+    buttonState5 = digitalRead( buttonPin5 );
+
+    // Si está siendo pulsado es HIGH
+    if (buttonState5 == HIGH) {
+      // Y el LED se enciende
+      digitalWrite(ledPin10, HIGH);
+      b4 = 1;
+    }
+    else {
+      // Si no es asi, se apaga
+      digitalWrite(ledPin10, LOW);
+    }
+    //
+    //
+    if (b1 == 1) {
+
+      if (cont == 1) {
+        Serial.println("Fase2");
       }
 
-      digitalWrite(ledPin13, ledState);
+      digitalWrite(ledPin13, HIGH);
+      digitalWrite(ledPin13, LOW);
+      digitalWrite(ledPin12, HIGH);
+      digitalWrite(ledPin13, LOW);
 
       // Leemos si el botón en pin2 está abierto o cerrado
       buttonState2 = digitalRead( buttonPin2 );
@@ -97,7 +157,11 @@ void loop() {
       if (buttonState2 == HIGH) {
         // Y el LED se enciende
         digitalWrite(ledPin13, HIGH);
-        b1 = 1;
+
+        if (cont == 0) {
+          b1 = 1;
+          cont = cont + 1;
+        }
       }
       else {
         // Si no es asi, se apaga
@@ -112,7 +176,11 @@ void loop() {
       if (buttonState3 == HIGH) {
         // Y el LED se enciende
         digitalWrite(ledPin12, HIGH);
-        b2 = 1;
+
+        if (cont == 1) {
+          b2 = 1;
+          cont = cont + 1;
+        }
       }
       else {
         // Si no es asi, se apaga
@@ -150,15 +218,20 @@ void loop() {
       }
       //
       //
-      if (b1 == 1) {
-        if (ledState == LOW) {
-          ledState = HIGH;
-        } else {
-          ledState = LOW;
+
+      if (cont >= 2) {
+
+        if (cont == 2) {
+
+          Serial.println("Fase3");
         }
 
-        digitalWrite(ledPin13, ledState);
-        digitalWrite(ledPin12, ledState);
+        digitalWrite(ledPin13, HIGH);
+        digitalWrite(ledPin13, LOW);
+        digitalWrite(ledPin12, HIGH);
+        digitalWrite(ledPin12, LOW);
+        digitalWrite(ledPin11, HIGH);
+        digitalWrite(ledPin11, LOW);
 
         // Leemos si el botón en pin2 está abierto o cerrado
         buttonState2 = digitalRead( buttonPin2 );
@@ -167,7 +240,11 @@ void loop() {
         if (buttonState2 == HIGH) {
           // Y el LED se enciende
           digitalWrite(ledPin13, HIGH);
-          b1 = 1;
+
+          if (cont == 2) {
+            b1 = 1;
+            cont = cont + 1;
+          }
         }
         else {
           // Si no es asi, se apaga
@@ -182,7 +259,11 @@ void loop() {
         if (buttonState3 == HIGH) {
           // Y el LED se enciende
           digitalWrite(ledPin12, HIGH);
-          b2 = 1;
+
+          if (cont == 3) {
+            b2 = 1;
+            cont = cont + 1;
+          }
         }
         else {
           // Si no es asi, se apaga
@@ -197,7 +278,11 @@ void loop() {
         if (buttonState4 == HIGH) {
           // Y el LED se enciende
           digitalWrite(ledPin11, HIGH);
-          b3 = 1;
+
+          if (cont == 4) {
+            b3 = 1;
+            cont = cont + 1;
+          }
         }
         else {
           // Si no es asi, se apaga
@@ -221,8 +306,306 @@ void loop() {
         //
         //
 
-      }
-    }
+        if (cont >= 5) {
 
+          if (cont == 5) {
+
+            Serial.println("Fase4");
+          }
+
+          digitalWrite(ledPin13, HIGH);
+          digitalWrite(ledPin13, LOW);
+          digitalWrite(ledPin12, HIGH);
+          digitalWrite(ledPin12, LOW);
+          digitalWrite(ledPin11, HIGH);
+          digitalWrite(ledPin11, LOW);
+          digitalWrite(ledPin10, HIGH);
+          digitalWrite(ledPin10, LOW);
+
+          // Leemos si el botón en pin2 está abierto o cerrado
+          buttonState2 = digitalRead( buttonPin2 );
+
+          // Si está siendo pulsado es HIGH
+          if (buttonState2 == HIGH) {
+            // Y el LED se enciende
+            digitalWrite(ledPin13, HIGH);
+
+            if (cont == 5) {
+              b1 = 1;
+              cont = cont + 1;
+            }
+          }
+          else {
+            // Si no es asi, se apaga
+            digitalWrite(ledPin13, LOW);
+          }
+          //
+          //
+          // Leemos si el botón en pin3 está abierto o cerrado
+          buttonState3 = digitalRead( buttonPin3 );
+
+          // Si está siendo pulsado es HIGH
+          if (buttonState3 == HIGH) {
+            // Y el LED se enciende
+            digitalWrite(ledPin12, HIGH);
+
+            if (cont == 6) {
+              b2 = 1;
+              cont = cont + 1;
+            }
+          }
+          else {
+            // Si no es asi, se apaga
+            digitalWrite(ledPin12, LOW);
+          }
+          //
+          //
+          // Leemos si el botón en pin4 está abierto o cerrado
+          buttonState4 = digitalRead( buttonPin4 );
+
+          // Si está siendo pulsado es HIGH
+          if (buttonState4 == HIGH) {
+            // Y el LED se enciende
+            digitalWrite(ledPin11, HIGH);
+
+            if (cont == 7) {
+              b3 = 1;
+              cont = cont + 1;
+            }
+          }
+          else {
+            // Si no es asi, se apaga
+            digitalWrite(ledPin11, LOW);
+          }
+          //
+          //
+          // Leemos si el botón en pin5 está abierto o cerrado
+          buttonState5 = digitalRead( buttonPin5 );
+
+          // Si está siendo pulsado es HIGH
+          if (buttonState5 == HIGH) {
+            // Y el LED se enciende
+            digitalWrite(ledPin10, HIGH);
+
+            if (cont == 8) {
+              b4 = 1;
+              cont = cont + 1;
+            }
+          }
+          else {
+            // Si no es asi, se apaga
+            digitalWrite(ledPin10, LOW);
+          }
+          //
+          //
+
+          if (cont >= 9) {
+
+            if (cont == 9) {
+
+              Serial.println("Fase5");
+            }
+
+            digitalWrite(ledPin13, HIGH);
+            digitalWrite(ledPin13, LOW);
+            digitalWrite(ledPin12, HIGH);
+            digitalWrite(ledPin12, LOW);
+            digitalWrite(ledPin11, HIGH);
+            digitalWrite(ledPin11, LOW);
+            digitalWrite(ledPin10, HIGH);
+            digitalWrite(ledPin10, LOW);
+            digitalWrite(ledPin13, HIGH);
+            digitalWrite(ledPin13, LOW);
+
+            // Leemos si el botón en pin2 está abierto o cerrado
+            buttonState2 = digitalRead( buttonPin2 );
+
+            // Si está siendo pulsado es HIGH
+            if (buttonState2 == HIGH) {
+              // Y el LED se enciende
+              digitalWrite(ledPin13, HIGH);
+
+              if (cont == 9 || cont == 13) {
+                b1 = 1;
+                cont = cont + 1;
+              }
+            }
+            else {
+              // Si no es asi, se apaga
+              digitalWrite(ledPin13, LOW);
+            }
+            //
+            //
+            // Leemos si el botón en pin3 está abierto o cerrado
+            buttonState3 = digitalRead( buttonPin3 );
+
+            // Si está siendo pulsado es HIGH
+            if (buttonState3 == HIGH) {
+              // Y el LED se enciende
+              digitalWrite(ledPin12, HIGH);
+
+              if (cont == 10) {
+                b2 = 1;
+                cont = cont + 1;
+              }
+            }
+            else {
+              // Si no es asi, se apaga
+              digitalWrite(ledPin12, LOW);
+            }
+            //
+            //
+            // Leemos si el botón en pin4 está abierto o cerrado
+            buttonState4 = digitalRead( buttonPin4 );
+
+            // Si está siendo pulsado es HIGH
+            if (buttonState4 == HIGH) {
+              // Y el LED se enciende
+              digitalWrite(ledPin11, HIGH);
+
+              if (cont == 11) {
+                b3 = 1;
+                cont = cont + 1;
+              }
+            }
+            else {
+              // Si no es asi, se apaga
+              digitalWrite(ledPin11, LOW);
+            }
+            //
+            //
+            // Leemos si el botón en pin5 está abierto o cerrado
+            buttonState5 = digitalRead( buttonPin5 );
+
+            // Si está siendo pulsado es HIGH
+            if (buttonState5 == HIGH) {
+              // Y el LED se enciende
+              digitalWrite(ledPin10, HIGH);
+
+              if (cont == 12) {
+                b4 = 1;
+                cont = cont + 1;
+              }
+            }
+            else {
+              // Si no es asi, se apaga
+              digitalWrite(ledPin10, LOW);
+            }
+            //
+            //
+
+            if (cont >= 14) {
+
+              if (cont == 14) {
+
+                Serial.println("Fase6");
+              }
+
+              digitalWrite(ledPin13, HIGH);
+              digitalWrite(ledPin13, LOW);
+              digitalWrite(ledPin12, HIGH);
+              digitalWrite(ledPin12, LOW);
+              digitalWrite(ledPin11, HIGH);
+              digitalWrite(ledPin11, LOW);
+              digitalWrite(ledPin10, HIGH);
+              digitalWrite(ledPin10, LOW);
+              digitalWrite(ledPin13, HIGH);
+              digitalWrite(ledPin13, LOW);
+              digitalWrite(ledPin12, HIGH);
+              digitalWrite(ledPin12, LOW);
+
+              // Leemos si el botón en pin2 está abierto o cerrado
+              buttonState2 = digitalRead( buttonPin2 );
+
+              // Si está siendo pulsado es HIGH
+              if (buttonState2 == HIGH) {
+                // Y el LED se enciende
+                digitalWrite(ledPin13, HIGH);
+
+                if (cont == 14 || cont == 18) {
+                  b1 = 1;
+                  cont = cont + 1;
+                }
+              }
+              else {
+                // Si no es asi, se apaga
+                digitalWrite(ledPin13, LOW);
+              }
+              //
+              //
+              // Leemos si el botón en pin3 está abierto o cerrado
+              buttonState3 = digitalRead( buttonPin3 );
+
+              // Si está siendo pulsado es HIGH
+              if (buttonState3 == HIGH) {
+                // Y el LED se enciende
+                digitalWrite(ledPin12, HIGH);
+
+                if (cont == 15 || cont == 19) {
+                  b2 = 1;
+                  cont = cont + 1;
+                }
+              }
+              else {
+                // Si no es asi, se apaga
+                digitalWrite(ledPin12, LOW);
+              }
+              //
+              //
+              // Leemos si el botón en pin4 está abierto o cerrado
+              buttonState4 = digitalRead( buttonPin4 );
+
+              // Si está siendo pulsado es HIGH
+              if (buttonState4 == HIGH) {
+                // Y el LED se enciende
+                digitalWrite(ledPin11, HIGH);
+
+                if (cont == 16) {
+                  b3 = 1;
+                  cont = cont + 1;
+                }
+              }
+              else {
+                // Si no es asi, se apaga
+                digitalWrite(ledPin11, LOW);
+              }
+              //
+              //
+              // Leemos si el botón en pin5 está abierto o cerrado
+              buttonState5 = digitalRead( buttonPin5 );
+
+              // Si está siendo pulsado es HIGH
+              if (buttonState5 == HIGH) {
+                // Y el LED se enciende
+                digitalWrite(ledPin10, HIGH);
+
+                if (cont == 17) {
+                  b4 = 1;
+                  cont = cont + 1;
+                }
+              }
+              else {
+                // Si no es asi, se apaga
+                digitalWrite(ledPin10, LOW);
+              }
+              //
+              //
+
+              if (cont == 20) {
+                Serial.println("Modulo desactivado");
+              }
+
+            }
+
+          }
+
+
+        }
+
+      }
+
+    }
   }
+
+
 }
